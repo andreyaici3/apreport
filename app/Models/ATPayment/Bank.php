@@ -13,6 +13,6 @@ class Bank extends Model
     protected $fillable = ["kode_bank", "nama_bank", "sisa_saldo", 'norek'];
 
     public function mutasi(){
-        return $this->hasMany(MutasiBank::class, "id_bank");
+        return $this->hasMany(MutasiBank::class, "id_bank")->orderBy('id', 'DESC');
     }
 }
