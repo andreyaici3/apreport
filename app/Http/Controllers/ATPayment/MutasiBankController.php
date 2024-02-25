@@ -23,7 +23,7 @@ class MutasiBankController extends Controller
     public function detail($id)
     {
         return view('atp.mutasi.detail', [
-            'bank' => Bank::find($id)
+            'bank' => Bank::find($id)->orderBy('id', 'DESC')
         ]);
     }
 
