@@ -136,8 +136,12 @@ class MutasiBankController extends Controller
                 ]);                
                 
             } else {
+                if ($mutasi_bank->tipe == "credit"){
+                    $jumlah = $bank->sisa_saldo - $mutasi_bank->amount;
+                } else {
+                    $jumlah = $bank->sisa_saldo + $mutasi_bank->amount;
+                }
                 
-                $jumlah = $bank->sisa_saldo + $mutasi_bank->amount;
                 $mutasi_bank->delete();
                 $saldo_akhir = $jumlah;
             }
