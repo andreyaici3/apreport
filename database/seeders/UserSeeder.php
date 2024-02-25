@@ -31,6 +31,14 @@ class UserSeeder extends Seeder
                 'password' => Hash::make("joya_123"), // password
                 'remember_token' => Str::random(10),
             ],
+            [
+                'name' => "Dani fathurahman",
+                'email' => "dani@gmail.com",
+                'email_verified_at' => now(),
+                'role' => 'karyawan',
+                'password' => Hash::make("joya_123"), // password
+                'remember_token' => Str::random(10),
+            ],
         ])->each(function($user){
             User::create($user);
         });
