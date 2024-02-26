@@ -95,6 +95,8 @@ Route::middleware(["auth", "user-role:superuser|karyawan"])->group(function () {
         Route::post('/modul/mutasi/store/{id_modul}', 'store')->name("atp.modul.mutasi.store");
         Route::get("/modul/mutasi/{id_monitor}/akhir", "update_akhir")->name("atp.modul.mutasi.akhir");
         Route::put('/modul/mutasi/{id_monitor}/akhir', "update_saldo_akhir");
+        Route::get("/modul/mutasi/monitor/{tanggal}/{id_modul}", "createmonitor")->name("atp.modul.mutasi.createmonitor");
+        Route::put("/modul/mutasi/monitor/updateawal/{tanggal}/{id_modul}", "syncsaldoawal")->name("atp.modul.mutasi.sync");
     });
 
     Route::controller(DepositKreditController::class)->group(function(){

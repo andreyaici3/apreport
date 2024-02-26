@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ATPayment;
 
 use App\Http\Controllers\Controller;
+use App\Models\ATPayment\DepositOtomax;
 use App\Models\ATPayment\Modul;
 use App\Models\ATPayment\MonitorModul;
 use Illuminate\Http\Request;
@@ -20,6 +21,8 @@ class MutasiModulController extends Controller
     public function detail($id)
     {
         return view('atp.mutasi.modul.detail', [
+            'dep' => DepositOtomax::get(),
+            'id' => $id,
             'modul' => Modul::find($id)
         ]);
     }
@@ -56,6 +59,40 @@ class MutasiModulController extends Controller
             return $this->result(true, "Update", $monitor->modul->id);
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->result(false, "Update", $monitor->modul->id);
+        }
+        
+    }
+
+    public function createmonitor($tanggal, $id_modul){
+        try {
+            MonitorModul::create([
+                'tanggal' => $tanggal,
+                'id_modul' => $id_modul
+            ]);
+            return $this->result(true, "Tambahkan", $id_modul);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return $this->result(false, "Tambahkan", $id_modul);
+        }
+    }
+
+    public function syncsaldoawal($tanggal, $id_modul)
+    {
+        $before = date('Y-m-d', strtotime('-1 day', strtotime($tanggal)));
+        $monitor = MonitorModul::where([
+            ['tanggal', "=", $before],
+            ['id_modul', "=", $id_modul]
+        ]);
+
+        if ($monitor->count() > 0){
+            MonitorModul::where([
+                ['tanggal', "=", $tanggal],
+                ['id_modul', "=", $id_modul]
+            ])->update([
+                'saldo_awal' => $monitor->first()->sisa_saldo
+            ]);
+            return $this->result(true, "Update", $id_modul);
+        } else {
+            return $this->result(false, "Update", $id_modul);
         }
         
     }

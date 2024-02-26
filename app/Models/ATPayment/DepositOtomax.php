@@ -20,4 +20,8 @@ class DepositOtomax extends Model
     {
         return $this->hasMany(DepositKredit::class, 'tanggal', 'tanggal');
     }
+
+    public function monitor_modul(){
+        return $this->hasMany(MonitorModul::class, 'tanggal', 'tanggal');
+    }
 }

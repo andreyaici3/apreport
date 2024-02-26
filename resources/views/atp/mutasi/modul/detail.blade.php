@@ -11,7 +11,7 @@
         </div><!-- /.col -->
     @endsection
 
-    <div class="container-fluid">        
+    <div class="container-fluid">
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -58,31 +58,49 @@
                                         @php
                                             $nomor = 1;
                                         @endphp
-                                        @foreach ($modul->monitor as $key => $value)
+                                        @foreach ($dep as $key => $value)
+                                            @php
+                                                $sd = $value->monitor_modul->where('id_modul', $id)->first();
+                                                $saldo_awal = $sd->saldo_awal ?? 0;
+                                                $penambahan_saldo = $sd->penambahan_saldo ?? 0;
+                                                $sisa_saldo = $sd->sisa_saldo ?? 0;
+                                                $pembelian_oto = $sd->pembelian_oto ?? 0;
+                                                $penjualan_oto = $sd->penjualan_oto ?? 0;
+                                                $result = $sd;
+                                            @endphp
                                             <tr>
                                                 <td>{{ $nomor++ }}</td>
-                                                <td>{{ $value->tanggal }}</td>
-                                                <td>Rp. {{ number_format($value->saldo_awal, 0, ',', '.') }}</td>
-                                                <td>Rp. {{ number_format($value->penambahan_saldo, 0, ',', '.') }}</td>
-                                                <td>Rp. {{ number_format($value->sisa_saldo, 0, ',', '.') }}</td>
-                                                <td>Rp. {{ number_format($value->pembelian_oto, 0, ',', '.') }}</td>
-                                                <td>Rp. {{ number_format($value->penjualan_oto, 0, ',', '.') }}</td>
+                                                <td>{{ date('d-m-Y', strtotime($value->tanggal)) }}</td>
+                                                <td>Rp.
+                                                    {{ number_format($saldo_awal, 0, ',', '.') }}
+                                                </td>
+                                                <td>Rp.
+                                                    {{ number_format($penambahan_saldo, 0, ',', '.') }}
+                                                </td>
+                                                <td>Rp.
+                                                    {{ number_format($sisa_saldo, 0, ',', '.') }}
+                                                </td>
+                                                <td>Rp.
+                                                    {{ number_format($pembelian_oto, 0, ',', '.') }}
+                                                </td>
+                                                <td>Rp.
+                                                    {{ number_format($penjualan_oto, 0, ',', '.') }}
+                                                </td>
                                                 <td>
-                                                    @if (($value->saldo_awal + $value->penambahan_saldo - $value->sisa_saldo) == $value->pembelian_oto )
+                                                    @if ($saldo_awal + $penambahan_saldo - $sisa_saldo == $pembelian_oto)
                                                         <button type="button" class="btn btn-md btn-success btn-xs">
                                                             Aman
                                                         </button>
                                                     @else
                                                         @php
-                                                            if ($value->pembelian_oto != 0){
-                                                                if (($value->saldo_awal + $value->penambahan_saldo) - $value->sisa_saldo > $value->pembelian_oto){
-                                                                    $sisa = (($value->saldo_awal + $value->penambahan_saldo) - $value->sisa_saldo) - $value->pembelian_oto;
+                                                            if ($pembelian_oto != 0) {
+                                                                if ($saldo_awal + $penambahan_saldo - $sisa_saldo > $pembelian_oto) {
+                                                                    $sisa = $saldo_awal + $penambahan_saldo - $sisa_saldo - $pembelian_oto;
                                                                 } else {
-                                                                    $sisa = ((($value->saldo_awal + $value->penambahan_saldo) - $value->sisa_saldo) - $value->pembelian_oto) * -1;
+                                                                    $sisa = ($saldo_awal + $penambahan_saldo - $sisa_saldo - $pembelian_oto) * -1;
                                                                 }
-                                                                
                                                             } else {
-                                                                $sisa = (($value->saldo_awal + $value->penambahan_saldo) - $value->sisa_saldo) * -1;
+                                                                $sisa = ($saldo_awal + $penambahan_saldo - $sisa_saldo) * -1;
                                                             }
                                                         @endphp
                                                         @if ($sisa > 0)
@@ -98,18 +116,24 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <form id=""
-                                                        action=""
-                                                        style="display: inline-block;" method="POST">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        <button type="button" data-id="{{ $value->id }}" onclick="hapus(this)" class="btn btn-xs btn-success">                                                            
-                                                            Update
-                                                        </button>
-                                                    </form>|
-                                                    <a href="{{ route('atp.modul.mutasi.akhir', ['id_monitor' => $value->id]) }}" class="btn btn-xs btn-primary">Saldo Akhir</a>
-                                                </td>
+                                                    @if ($result != null)
+                                                        <form id="delete{{ $sd->id }}" action="{{ route('atp.modul.mutasi.sync', ['tanggal' => $value->tanggal, 'id_modul' => $id]) }}"
+                                                            style="display: inline-block;" method="POST">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <button type="button" data-id="{{ $sd->id }}"
+                                                                onclick="hapus(this)" class="btn btn-xs btn-success">
+                                                                Sync Saldo Awal
+                                                            </button>
+                                                        </form>|
+                                                        <a href="{{ route('atp.modul.mutasi.akhir', ['id_monitor' => $sd->id]) }}"
+                                                            class="btn btn-xs btn-primary">Input Sisa Saldo</a>
+                                                    @else
+                                                        <a href="{{ route('atp.modul.mutasi.createmonitor', ['id_modul' => $id, 'tanggal' => $value->tanggal]) }}"
+                                                            class="btn btn-xs btn-info">Buat Monitor</a>
+                                                    @endif
 
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -152,12 +176,12 @@
             function hapus(d) {
                 Swal.fire({
                     title: "Konfirmasi",
-                    text: "Yakin Ingin Menhapus Data",
+                    text: "Yakin Ingin Synsc Saldo Awal",
                     icon: "question",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",
                     cancelButtonColor: "#d33",
-                    confirmButtonText: "Yes, delete it!"
+                    confirmButtonText: "Yes"
                 }).then((result) => {
                     if (result.isConfirmed) {
                         var id = d.getAttribute("data-id");
