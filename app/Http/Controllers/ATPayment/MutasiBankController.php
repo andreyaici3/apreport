@@ -117,11 +117,19 @@ class MutasiBankController extends Controller
             $bank = Bank::find($id_bank);
             $mutasi_bank = MutasiBank::find($id_mutasi);
             if ($mutasi_bank->deposit_spl == 1) {
-                $mutasi_modul = MutasiModul::find($mutasi_bank->id_mutasi_modul);
-                $jumlah_mutasi = $mutasi_modul->jumlah;
-                $saldo_akhir = $bank->sisa_saldo + $jumlah_mutasi;
-                $tgl = $mutasi_modul->tanggal;
-                $id_modul = $mutasi_modul->id_modul;
+                if ($mutasi_bank->tipe == "debit") {
+                    $mutasi_modul = MutasiModul::find($mutasi_bank->id_mutasi_modul);
+                    $jumlah_mutasi = $mutasi_modul->jumlah;
+                    $saldo_akhir = $bank->sisa_saldo + $jumlah_mutasi;
+                    $tgl = $mutasi_modul->tanggal;
+                    $id_modul = $mutasi_modul->id_modul;
+                } else {
+                    $mutasi_modul = MutasiModul::find($mutasi_bank->id_mutasi_modul);
+                    $jumlah_mutasi = $mutasi_modul->jumlah;
+                    $saldo_akhir = $bank->sisa_saldo - $jumlah_mutasi;
+                    $tgl = $mutasi_modul->tanggal;
+                    $id_modul = $mutasi_modul->id_modul;
+                }
                 $mutasi_bank->delete();
                 $mutasi_modul->delete();
                 $penambahan = MutasiModul::where([
@@ -133,15 +141,14 @@ class MutasiBankController extends Controller
                     ['tanggal', "=", $tgl]
                 ])->update([
                     'penambahan_saldo' => $penambahan
-                ]);                
-                
+                ]);
             } else {
-                if ($mutasi_bank->tipe == "credit"){
+                if ($mutasi_bank->tipe == "credit") {
                     $jumlah = $bank->sisa_saldo - $mutasi_bank->amount;
                 } else {
                     $jumlah = $bank->sisa_saldo + $mutasi_bank->amount;
                 }
-                
+
                 $mutasi_bank->delete();
                 $saldo_akhir = $jumlah;
             }
@@ -150,7 +157,6 @@ class MutasiBankController extends Controller
             ]);
 
             return $this->result(true, "Hapus", $bank->id);
-
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->result(false, "Hapus", $bank->id);
         }
