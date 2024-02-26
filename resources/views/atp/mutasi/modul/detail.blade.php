@@ -107,7 +107,7 @@
                                                             Update
                                                         </button>
                                                     </form>|
-                                                    <a href="" class="btn btn-xs btn-primary">Saldo Akhir</a>
+                                                    <a href="{{ route('atp.modul.mutasi.akhir', ['id_monitor' => $value->id]) }}" class="btn btn-xs btn-primary">Saldo Akhir</a>
                                                 </td>
 
                                             </tr>

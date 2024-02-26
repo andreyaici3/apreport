@@ -10,4 +10,8 @@ class MonitorModul extends Model
     use HasFactory;
     protected $table = "monitor_modul";
     protected $fillable = ["id_modul", "tanggal", "saldo_awal", "penambahan_saldo", "sisa_saldo", "pembelian_oto", "penjualan_oto"];
+
+    public function modul(){
+        return $this->belongsTo(Modul::class, 'id_modul');
+    }
 }
