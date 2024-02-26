@@ -61,7 +61,7 @@
                                                 <td>{{ $nomor++ }}</td>
                                                 <td>{{ date('d-m-Y', strtotime($value->tanggal)) }}</td>
                                                 @foreach($bank as $bk)
-                                                    <td>Rp. {{ number_format($value->mutasibank->where('id_bank', $bk->id)->sum('amount'), 0, ',', '.') }}</td>
+                                                    <td>Rp. {{ number_format($value->mutasibank->where('id_bank', $bk->id)->where('deposit_rs', 1)->sum('amount'), 0, ',', '.') }}</td>
                                                 @endforeach    
                                                 <td>Rp. {{ number_format($value->deposit_kredit->sum('nominal'), 0, ',', '.') }}</td>
                                                 <td>Rp. {{ number_format($value->nominal, 0, ',', '.') }}</td>
