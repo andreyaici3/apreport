@@ -61,13 +61,14 @@ class RequestDepositController extends Controller
             $data = [
                 'result' => $output_array['nominal'] == [] ? false : true,
                 "modul" => $modul->nama_modul,
-                'bri' => @$output_array["bri"] == [] ? null : $output_array["bri"],
-                "mandiri" => @$output_array["mandiri"] == [] ? null : $output_array["mandiri"],
-                "bni" => @$output_array["bni"] == [] ? null : $output_array["bni"],
-                "bca" => @$output_array["bca"] == [] ? null : $output_array["bca"],
-                "nominal" => @$output_array["nominal"] == [] ? 0 : $output_array["nominal"],
-                "nama" => @$output_array["atasnama"] == [] ? null : $output_array["atasnama"],
+                'bri' => @$output_array["bri"] == [] ? null : $output_array["bri"][0],
+                "mandiri" => @$output_array["mandiri"] == [] ? null : $output_array["mandiri"][0],
+                "bni" => @$output_array["bni"] == [] ? null : $output_array["bni"][0],
+                "bca" => @$output_array["bca"] == [] ? null : $output_array["bca"][0],
+                "nominal" => @$output_array["nominal"] == [] ? 0 : str_replace(",","", str_replace(".", "", $output_array["nominal"]))[0],
+                "nama" => @$output_array["atasnama"] == [] ? null : $output_array["atasnama"][0],
             ];
+
             return view("atp.request.result", $data);
         } catch (RequestException $e) {
             return $e;

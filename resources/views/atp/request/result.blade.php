@@ -46,29 +46,37 @@
                                                     id="copyNominal"><i class="far fa-copy"></i></a></td>
                                         </tr>
                                     @endif
-
-                                    <tr>
-                                        <td><img width="100px" src="/dist/img/bca.png" alt=""></td>
-                                        <td>{{ $bca }} <a class="text-primary" id="copyNominal"><i
-                                                    class="far fa-copy"></i></a></td>
-                                    </tr>
-                                    <tr>
-                                        <td><img width="100px" src="/dist/img/bni.png" alt=""></td>
-                                        <td>{{ $bni }} <a class="text-primary" id="copyNominal"><i
-                                                    class="far fa-copy"></i></a></td>
-                                    </tr>
-                                    <tr>
-                                        <td><img width="100px" src="/dist/img/mandiri.png" alt=""></td>
-                                        <td>{{ $mandiri }} <a class="text-primary" id="copyNominal"><i
-                                                    class="far fa-copy"></i></a></td>
-                                    </tr>
+                                    @if ($bca != null)
+                                        <tr>
+                                            <td><img width="100px" src="/dist/img/bca.png" alt=""></td>
+                                            <td>{{ $bca }} <a class="text-primary" id="copyNominal"><i
+                                                        class="far fa-copy"></i></a></td>
+                                        </tr>
+                                    @endif
+                                    @if ($bni != null)
+                                        <tr>
+                                            <td><img width="100px" src="/dist/img/bni.png" alt=""></td>
+                                            <td>{{ $bni }} <a class="text-primary" id="copyNominal"><i
+                                                        class="far fa-copy"></i></a></td>
+                                        </tr>
+                                    @endif
+                                    @if ($mandiri != null)
+                                        <tr>
+                                            <td><img width="100px" src="/dist/img/mandiri.png" alt=""></td>
+                                            <td>{{ $mandiri }} <a class="text-primary" id="copyNominal"><i
+                                                        class="far fa-copy"></i></a></td>
+                                        </tr>
+                                    @endif
                                 </table>
                             </div>
                             <h4 class="text-center">Atas Nama: <br><b>{{ $nama }}</b></h4>
+                            <div class="text-center">
+                                <a class="text-center btn btn-primary" href="{{ route('atp.req') }}">Kembali</a>
+                            </div>
                         @else
                             <h1 class="text-center">Request Tiket Gagal</h1>
                             <div class="text-center">
-                                <a class="text-center btn btn-primary" href="">Kembali</a>
+                                <a class="text-center btn btn-primary" href="{{ route('atp.req') }}">Kembali</a>
                             </div>
                         @endif
 
