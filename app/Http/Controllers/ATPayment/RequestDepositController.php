@@ -13,6 +13,7 @@ class RequestDepositController extends Controller
 {
     public function index()
     {
+        
         return view('atp.request.index', [
             'modul' => Modul::get()
         ]);
@@ -56,8 +57,8 @@ class RequestDepositController extends Controller
         $client = new \GuzzleHttp\Client();
         try {
             $response = $client->get($format);
-            $body = $response->getBody();
-            preg_match_all("/$modul->format_response/", $body, $output_array);
+            $input_lines = $response->getBody();
+            preg_match_all("/$modul->format_response/", $input_lines, $output_array);
             $data = [
                 'result' => $output_array['nominal'] == [] ? false : true,
                 "modul" => $modul->nama_modul,
@@ -68,7 +69,7 @@ class RequestDepositController extends Controller
                 "nominal" => @$output_array["nominal"] == [] ? 0 : str_replace(",","", str_replace(".", "", $output_array["nominal"]))[0],
                 "nama" => @$output_array["atasnama"] == [] ? null : $output_array["atasnama"][0],
             ];
-
+                        
             return view("atp.request.result", $data);
         } catch (RequestException $e) {
             return $e;
