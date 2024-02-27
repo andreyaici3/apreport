@@ -12,7 +12,7 @@ class MonitoringDepositController extends Controller
     public function index()
     {
         return view('atp.monitoring.saldo.index',[
-            'mutasi' => DepositOtomax::get(),
+            'mutasi' => DepositOtomax::orderBy('tanggal', 'DESC')->get(),
             'bank' => Bank::get(),
         ]);
     }
