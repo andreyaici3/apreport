@@ -13,7 +13,7 @@ class DepositOtomaxController extends Controller
     public function index()
     {        
         return view('atp.deposit.otomax.index', [
-            'otomax' =>DepositOtomax::get(),
+            'otomax' =>DepositOtomax::orderBy('tanggal', 'DESC')->get(),
         ]);
     }
 
