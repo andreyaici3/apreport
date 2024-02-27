@@ -11,6 +11,43 @@
         <span id="nama_modul-error" class="error invalid-feedback">
             {{ $errors->has('nama_modul') ? '*) ' . $errors->first('nama_modul') : '' }}</span>
     </div>
+    <div class="form-group">
+        <label for="ipcenter">IP Center</label>
+        <input type="text" name="ipcenter" class="form-control {{ $errors->has('ipcenter') ? 'is-invalid' : '' }}" id="ipcenter" placeholder="Masukan IP Ceneter" aria-describedby="ipcenter-error" aria-invalid="false" value="{{ old('ipcenter') ?? @$modul->ipcenter }}">
+        <span id="ipcenter-error" class="error invalid-feedback">
+            {{ $errors->has('ipcenter') ? '*) ' . $errors->first('ipcenter') : '' }}</span>
+    </div>
+
+    <div class="form-group">
+        <label for="memberid">Member ID</label>
+        <input type="text" name="memberid" class="form-control {{ $errors->has('memberid') ? 'is-invalid' : '' }}" id="memberid" placeholder="Masukan Member ID" aria-describedby="memberid-error" aria-invalid="false" value="{{ old('memberid') ?? @$modul->memberid }}">
+        <span id="memberid-error" class="error invalid-feedback">
+            {{ $errors->has('memberid') ? '*) ' . $errors->first('memberid') : '' }}</span>
+    </div>
+
+    <div class="form-group">
+        <label for="pin">PIN</label>
+        <input type="text" name="pin" class="form-control {{ $errors->has('pin') ? 'is-invalid' : '' }}" id="pin" placeholder="Masukan PIN Trx" aria-describedby="pin-error" aria-invalid="false" value="{{ old('pin') ?? @$modul->pin }}">
+        <span id="pin-error" class="error invalid-feedback">
+            {{ $errors->has('pin') ? '*) ' . $errors->first('pin') : '' }}</span>
+    </div>
+
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="text" name="password" class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}" id="password" placeholder="Masukan Password" aria-describedby="password-error" aria-invalid="false" value="{{ old('password') ?? @$modul->password }}">
+        <span id="password-error" class="error invalid-feedback">
+            {{ $errors->has('password') ? '*) ' . $errors->first('password') : '' }}</span>
+    </div>
+
+    <div class="form-group">
+        <label>Format Request Tiket</label>
+        <textarea class="form-control" placeholder="Masukan Format" name="format_request">{{ @$modul->format_request }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Regex Penangkap Tiket</label>
+        <textarea class="form-control" placeholder="Masukan Format" name="format_response">{{ @$modul->format_response }}</textarea>
+    </div>
 
 </div>
 

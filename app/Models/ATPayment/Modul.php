@@ -9,7 +9,7 @@ class Modul extends Model
 {
     use HasFactory;
     protected $table = "modul";
-    protected $fillable = ['kode_modul', 'nama_modul', 'sisa_saldo'];
+    protected $fillable = ['kode_modul', 'nama_modul', 'sisa_saldo', 'ipcenter', 'pin', 'password', 'memberid', 'format_request', 'format_response'];
 
     public function mutasi(){
         return $this->hasMany(MutasiModul::class, 'id_modul')->orderBy('tanggal', 'ASC');

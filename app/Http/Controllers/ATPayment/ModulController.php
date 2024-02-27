@@ -45,6 +45,12 @@ class ModulController extends Controller
             Modul::find($id)->update([
                 'nama_modul' =>  $request->nama_modul,
                 'kode_modul' => $request->kode_modul,
+                'ipcenter' => $request->ipcenter,
+                'format_request' => $request->format_request,
+                'format_response' => $request->format_response,
+                'memberid' => $request->memberid, 
+                'pin' => $request->pin,
+                'password' => $request->password,
             ]);
             return $this->result(true, "Di Ubah");
         } catch (\Illuminate\Database\QueryException $e) {
