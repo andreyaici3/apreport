@@ -13,7 +13,7 @@ class AuditController extends Controller
     public function main()
     {
         return view('atp.audit.main.index', [
-            'main' => MutasiBank::where([
+            'main' => MutasiBank::orderBy('tanggal', 'DESC')->where([
                 ['keterangan', "=", "NOTHING"],
                 ['id_detail_audit', "=", NULL]
             ])->get(),
@@ -60,7 +60,7 @@ class AuditController extends Controller
     public function pemasukan()
     {
         return view('atp.audit.pemasukan.index', [
-            'pemasukan' => MutasiBank::where('id_detail_audit', '!=', 0)->whereHas('audit_detail', function ($query) {
+            'pemasukan' => MutasiBank::orderBy('tanggal', 'DESC')->where('id_detail_audit', '!=', 0)->whereHas('audit_detail', function ($query) {
                 $query->where('id_audit_master', '=', 2);
             })->get(),
         ]);
@@ -83,7 +83,7 @@ class AuditController extends Controller
     public function pengeluaran()
     {
         return view('atp.audit.pengeluaran.index', [
-            'pemasukan' => MutasiBank::where('id_detail_audit', '!=', 0)->whereHas('audit_detail', function ($query) {
+            'pemasukan' => MutasiBank::orderBy('tanggal', 'DESC')->where('id_detail_audit', '!=', 0)->whereHas('audit_detail', function ($query) {
                 $query->where('id_audit_master', '=', 1);
             })->get(),
         ]);
