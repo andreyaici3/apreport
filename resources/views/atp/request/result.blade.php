@@ -67,6 +67,13 @@
                                                         class="far fa-copy"></i></a></td>
                                         </tr>
                                     @endif
+                                    @if ($bsi != null)
+                                        <tr>
+                                            <td><img width="100px" src="/dist/img/bsi.png" alt=""></td>
+                                            <td>{{ $bsi }} <a class="text-primary" id="copyNominal"><i
+                                                        class="far fa-copy"></i></a></td>
+                                        </tr>
+                                    @endif
                                 </table>
                             </div>
                             <h4 class="text-center">Atas Nama: <br><b>{{ $nama }}</b></h4>

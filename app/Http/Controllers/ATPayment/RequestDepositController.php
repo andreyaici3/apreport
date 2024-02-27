@@ -66,6 +66,7 @@ class RequestDepositController extends Controller
                 "mandiri" => @$output_array["mandiri"] == [] ? null : $output_array["mandiri"][0],
                 "bni" => @$output_array["bni"] == [] ? null : $output_array["bni"][0],
                 "bca" => @$output_array["bca"] == [] ? null : $output_array["bca"][0],
+                "bsi" => @$output_array["bsi"] == [] ? null : $output_array["bsi"][0],
                 "nominal" => @$output_array["nominal"] == [] ? 0 : str_replace(",","", str_replace(".", "", $output_array["nominal"]))[0],
                 "nama" => @$output_array["atasnama"] == [] ? null : $output_array["atasnama"][0],
             ];
