@@ -9,6 +9,7 @@ use App\Http\Controllers\ATPayment\ModulController;
 use App\Http\Controllers\ATPayment\MonitoringDepositController;
 use App\Http\Controllers\ATPayment\MutasiBankController;
 use App\Http\Controllers\ATPayment\MutasiModulController;
+use App\Http\Controllers\ATPayment\RequestDepositController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\DashboardController;
 use App\Models\ATPayment\DepositOtomax;
@@ -77,6 +78,8 @@ Route::middleware(["auth", "user-role:superuser"])->group(function () {
     Route::controller(MonitoringDepositController::class)->group(function(){
         Route::get("/monitor/deposit/otomax", "index")->name("atp.monitoring.deposit");
     });
+
+    
 });
 
 Route::middleware(["auth", "user-role:superuser|karyawan"])->group(function () {
@@ -106,6 +109,11 @@ Route::middleware(["auth", "user-role:superuser|karyawan"])->group(function () {
         Route::get("/deposit/kredit/{id}/edit", "edit")->name('atp.deposit.kredit.edit');
         Route::put("/deposit/kredit/{id}", "update")->name('atp.deposit.kredit.update');
         Route::delete("/deposit/kredit/{id}", "destroy")->name('atp.deposit.kredit.destroy');
+    });
+
+    Route::controller(RequestDepositController::class)->group(function(){
+        Route::get("/request", 'index')->name('atp.req');
+        Route::post("/request", "store");
     });
 
 });

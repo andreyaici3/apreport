@@ -12,7 +12,7 @@ class DepositKreditController extends Controller
     public function index()
     {
         return view("atp.deposit.kredit.index", [
-            'kredit' => DepositKredit::get()
+            'kredit' => DepositKredit::orderBy("tanggal", "DESC")->get()
         ]);
     }
 

@@ -21,7 +21,7 @@ class MutasiModulController extends Controller
     public function detail($id)
     {
         return view('atp.mutasi.modul.detail', [
-            'dep' => DepositOtomax::get(),
+            'dep' => DepositOtomax::orderBy('tanggal', 'DESC')->get(),
             'id' => $id,
             'modul' => Modul::find($id)
         ]);

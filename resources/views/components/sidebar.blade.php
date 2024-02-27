@@ -135,7 +135,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="" class="nav-link {{ $menuActive == 'tiket' ? 'active' : '' }}">
+                        <a href="{{ route('atp.req') }}" class="nav-link {{ $menuActive == 'tiket' ? 'active' : '' }}">
                             <i class="fas fas fa-ticket-alt nav-icon"></i>
                             <p>
                                 Request Tiket
