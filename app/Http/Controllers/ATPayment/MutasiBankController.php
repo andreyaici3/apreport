@@ -9,7 +9,6 @@ use App\Models\ATPayment\Modul;
 use App\Models\ATPayment\MonitorModul;
 use App\Models\ATPayment\MutasiBank;
 use App\Models\ATPayment\MutasiModul;
-use GuzzleHttp\Promise\Create;
 
 class MutasiBankController extends Controller
 {
@@ -37,77 +36,82 @@ class MutasiBankController extends Controller
 
     public function store(MutasiBankRequest $request, $id_bank)
     {
-        try {
-            $bank = Bank::find($id_bank);
-            if ($request->tipe_mutasi == "debit") {
-                $saldo_akhir = $bank->sisa_saldo - $request->amount;
-            } else {
-                $saldo_akhir = $bank->sisa_saldo + $request->amount;
-            }
-            if ($request->deposit_spl == "0" && $request->deposit_rs == null) {
-                $keterangan = "NOTHING";
-                $deposit_spl = 0;
-                $deposit_rs = 0;
-                $id_modul = NULL;
-            } else if ($request->deposit_spl == "0" && $request->deposit_rs != null) {
+        $bank = Bank::find($id_bank);
+        $tipe_mutasi = $request->tipe_mutasi;
+        $deposit_rs = $request->deposit_rs;
+        $id_modul = $request->deposit_spl;
+        if ($tipe_mutasi == "credit"){
+            if ($deposit_rs == "on"){
                 $keterangan = "Deposit Resseler";
-                $deposit_spl = 0;
                 $deposit_rs = 1;
-                $id_modul = NULL;
+            } else {
+                $keterangan = "NOTHING";
+                $deposit_rs = 0;
+            }
+            MutasiBank::create([
+                'id_bank' => $bank->id,
+                'keterangan' => $keterangan,
+                'tanggal' => $request->tanggal,
+                'tipe' => "credit",
+                'amount' => $request->amount,
+                'deposit_rs' => $deposit_rs,
+            ]);
+            $bank->update([
+                'sisa_saldo' => $bank->sisa_saldo + $request->amount
+            ]);
+            return $this->result(true, "Tambah", $bank->id);
+        } else {
+            if ($id_modul == 0){
+                $keterangan = "NOTHING";
+                $id_modul = null;
+                $deposit_spl = 0;
+                $id_mutasi_modul = null;
             } else {
                 $deposit_spl = 1;
-                $deposit_rs = 0;
-                $id_modul = $request->deposit_spl;
-                $keterangan = "Deposit Ke " . Modul::find($request->deposit_spl)->nama_modul;
-                $mutasi = MutasiModul::create([
+                $modul = Modul::find($id_modul);
+                $keterangan = 'Deposit Dari ' . $bank->kode_bank . " Ke " . $modul->nama_modul;
+                $valueMutasiModul = [
                     'id_modul' => $id_modul,
-                    'tanggal' => $request->tanggal,
-                    'keterangan' => 'Deposit Dari ' . $bank->kode_bank,
+                    "tanggal" => $request->tanggal,
+                    'keterangan' => $keterangan,
                     'jumlah' => $request->amount,
-                ]);
+                ];
+                $mutasi = MutasiModul::create($valueMutasiModul);
+                $id_mutasi_modul = $mutasi->id;
                 $cekMonitor = MonitorModul::where([
                     ['id_modul', "=", $id_modul],
                     ['tanggal', "=", $request->tanggal]
                 ]);
-
-                //jumlahkan saldo
-                $penambahan = MutasiModul::where([
-                    ['tanggal', '=', $request->tanggal],
-                    ['id_modul', '=', $id_modul]
-                ])->sum('jumlah');
-
                 if ($cekMonitor->count() > 0) {
+                    $penambahanSaldoAwal = $cekMonitor->first()->penambahan_saldo;
+                    $penambahanSaldoAkhir = $penambahanSaldoAwal + $request->amount;
                     $cekMonitor->update([
-                        'penambahan_saldo' => $penambahan,
+                        'penambahan_saldo' => $penambahanSaldoAkhir
                     ]);
                 } else {
+                    //monitor belum ada
                     MonitorModul::create([
                         'id_modul' => $id_modul,
                         'tanggal' => $request->tanggal,
                         'saldo_awal' => 0,
-                        'penambahan_saldo' => $penambahan,
+                        'penambahan_saldo' => $request->amount,
                     ]);
                 }
             }
-
             MutasiBank::create([
                 'id_bank' => $bank->id,
+                'keterangan' => $keterangan,
                 'tanggal' => $request->tanggal,
-                "keterangan" => $keterangan,
-                'tipe' => $request->tipe_mutasi,
+                'tipe' => "debit",
                 'amount' => $request->amount,
-                'deposit_rs' => $deposit_rs,
                 'deposit_spl' => $deposit_spl,
-                'id_modul' => $id_modul,
-                'id_mutasi_modul' => $mutasi->id ?? null
+                'id_modul' => $id_modul ?? null,
+                'id_mutasi_modul' => $id_mutasi_modul,
             ]);
             $bank->update([
-                'sisa_saldo' => $saldo_akhir
+                'sisa_saldo' => $bank->sisa_saldo - $request->amount
             ]);
-
             return $this->result(true, "Tambah", $bank->id);
-        } catch (\Illuminate\Database\QueryException $e) {
-            return $this->result(false, "Tambah", $bank->id);
         }
     }
 
@@ -116,48 +120,39 @@ class MutasiBankController extends Controller
         try {
             $bank = Bank::find($id_bank);
             $mutasi_bank = MutasiBank::find($id_mutasi);
-            if ($mutasi_bank->deposit_spl == 1) {
-                if ($mutasi_bank->tipe == "debit") {
-                    $mutasi_modul = MutasiModul::find($mutasi_bank->id_mutasi_modul);
-                    $jumlah_mutasi = $mutasi_modul->jumlah;
-                    $saldo_akhir = $bank->sisa_saldo + $jumlah_mutasi;
-                    $tgl = $mutasi_modul->tanggal;
-                    $id_modul = $mutasi_modul->id_modul;
+            if ($mutasi_bank->tipe == "debit"){
+                //mutasi debit
+                if ($mutasi_bank->deposit_spl == 1){
+                    $mutasi_modul  = MutasiModul::find($mutasi_bank->id_mutasi_modul);
+                    $jumlah = $mutasi_modul->jumlah;
+                    $monitor_modul = MonitorModul::where([
+                        ["tanggal", "=", $mutasi_modul->tanggal],
+                        ["id_modul", "=", $mutasi_modul->id_modul]
+                    ]);
+                    $penambahan = $monitor_modul->first()->penambahan_saldo;
+                    $monitor_modul->update([
+                        'penambahan_saldo' => $penambahan - $jumlah
+                    ]);
+                    $mutasi_bank->delete();
+                    $mutasi_modul->delete();
                 } else {
-                    $mutasi_modul = MutasiModul::find($mutasi_bank->id_mutasi_modul);
-                    $jumlah_mutasi = $mutasi_modul->jumlah;
-                    $saldo_akhir = $bank->sisa_saldo - $jumlah_mutasi;
-                    $tgl = $mutasi_modul->tanggal;
-                    $id_modul = $mutasi_modul->id_modul;
+                    $jumlah = $mutasi_bank->amount;
+                    $mutasi_bank->delete();
                 }
-                $mutasi_bank->delete();
-                $mutasi_modul->delete();
-                $penambahan = MutasiModul::where([
-                    ['tanggal', '=', $tgl],
-                    ['id_modul', '=', $id_modul]
-                ])->sum('jumlah');
-
-                MonitorModul::where([
-                    ['tanggal', "=", $tgl]
-                ])->update([
-                    'penambahan_saldo' => $penambahan
+                $bank->update([
+                    'sisa_saldo' => $bank->sisa_saldo + $jumlah
                 ]);
+                return $this->result(true, "Hapus", $bank->id);
             } else {
-                if ($mutasi_bank->tipe == "credit") {
-                    $jumlah = $bank->sisa_saldo - $mutasi_bank->amount;
-                } else {
-                    $jumlah = $bank->sisa_saldo + $mutasi_bank->amount;
-                }
-
+                $jumlah = $mutasi_bank->amount;
+                $bank->update([
+                    'sisa_saldo' => $bank->sisa_saldo - $jumlah
+                ]);
                 $mutasi_bank->delete();
-                $saldo_akhir = $jumlah;
+                return $this->result(true, "Hapus", $bank->id);
             }
-            $bank->update([
-                'sisa_saldo' => $saldo_akhir
-            ]);
-
-            return $this->result(true, "Hapus", $bank->id);
         } catch (\Illuminate\Database\QueryException $e) {
+            return $e;
             return $this->result(false, "Hapus", $bank->id);
         }
     }

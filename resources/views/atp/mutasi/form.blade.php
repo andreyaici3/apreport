@@ -27,14 +27,14 @@
     <div class="form-group">
         <label for="tipe_mutasi">Tipe Mutasi</label>
         <div class="form-check">
-            <input class="form-check-input {{ $errors->has('tipe_mutasi') ? 'is-invalid' : '' }}" type="radio"
+            <input id="credit" class="form-check-input {{ $errors->has('tipe_mutasi') ? 'is-invalid' : '' }}" type="radio"
                 name="tipe_mutasi" value="credit">
-            <label class="form-check-label">Credit</label>
+            <label class="form-check-label" for="credit">Credit</label>
         </div>
         <div class="form-check">
             <input class="form-check-input {{ $errors->has('tipe_mutasi') ? 'is-invalid' : '' }}" type="radio"
-                name="tipe_mutasi" value="debit">
-            <label class="form-check-label">Debit</label>
+                name="tipe_mutasi" value="debit" id="debit">
+            <label class="form-check-label" for="debit">Debit</label>
             <span id="tipe_mutasi-error" class="error invalid-feedback">
                 {{ $errors->has('tipe_mutasi') ? '*) ' . $errors->first('tipe_mutasi') : '' }}</span>
         </div>
