@@ -9,6 +9,7 @@ use App\Http\Controllers\ATPayment\ModulController;
 use App\Http\Controllers\ATPayment\MonitoringDepositController;
 use App\Http\Controllers\ATPayment\MutasiBankController;
 use App\Http\Controllers\ATPayment\MutasiModulController;
+use App\Http\Controllers\ATPayment\ReportController;
 use App\Http\Controllers\ATPayment\RequestDepositController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\DashboardController;
@@ -30,6 +31,11 @@ Route::controller(AuthenticationController::class)->group(function () {
 
 
 Route::middleware(["auth", "user-role:superuser"])->group(function () {
+    Route::controller(ReportController::class)->group(function () {
+        Route::get('/report', 'index')->name("atp.report");
+       
+    });
+
     Route::controller(KaryawanController::class)->group(function () {
         Route::get('/karyawan', 'index')->name("atp.karyawan");
         Route::get('/karyawan/create', 'create')->name("atp.karyawan.create");

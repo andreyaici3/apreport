@@ -10,7 +10,7 @@ class DepositOtomax extends Model
     use HasFactory;
 
     protected $table = "deposit_otomax";
-    protected $fillable = ["tanggal", "nominal"];
+    protected $fillable = ["tanggal", "nominal", "komisi", "laba"];
 
     public function mutasibank(){
         return $this->hasMany(MutasiBank::class, 'tanggal', 'tanggal');

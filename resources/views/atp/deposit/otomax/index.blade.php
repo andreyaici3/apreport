@@ -44,8 +44,9 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Tanggal</th>
-                                            
-                                            <th>Nominal</th>
+                                            <th>Total Deposit RS</th>
+                                            <th>Komisi</th>
+                                            <th>Labar bersih</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -58,6 +59,8 @@
                                             <td>{{ $nomor++ }}</td>
                                             <td>{{ date('d-m-Y', strtotime($value->tanggal)) }}</td>
                                             <td>Rp. {{ number_format($value->nominal, 0, ',', '.') }}</td>
+                                            <td>Rp. {{  number_format($value->komisi, 0, ',', '.') }}</td>
+                                            <td>Rp. {{  number_format($value->laba, 0, ',', '.') }}</td>
                                             <td>
                                                 <a href="{{ route('atp.deposit.otomax.edit', ['id' => $value->id]) }}" class="btn btn-xs btn-primary">
                                                     <i class="fas fa-edit"></i>

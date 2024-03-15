@@ -93,7 +93,7 @@
                             class="nav-link {{ $menuActive == 'otomax' ? 'active' : '' }}">
                             <i class="fas fa-cash-register nav-icon"></i>
                             <p>
-                                Deposit Reseller
+                                Data Otomax
                             </p>
                         </a>
                     </li>
@@ -103,6 +103,15 @@
                             <i class="fas fa-vote-yea nav-icon"></i>
                             <p>
                                 Monitoring Deposit
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('atp.report') }}"
+                            class="nav-link {{ $menuActive == 'report' ? 'active' : '' }}">
+                            <i class="fas fa-vote-yea nav-icon"></i>
+                            <p>
+                                Laporan
                             </p>
                         </a>
                     </li>
