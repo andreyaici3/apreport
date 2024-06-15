@@ -11,7 +11,7 @@ class ReportController extends Controller
     public function index()
     {
         return view('atp.report.report', [
-            'rep' => DepositOtomax::whereMonth('tanggal', '05')->get(),
+            'rep' => DepositOtomax::whereMonth('tanggal', '06')->get(),
         ]);
     }
 }

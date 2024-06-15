@@ -2,7 +2,7 @@
 
     @section('breadcrumb')
         <div class="col-sm-6">
-            <h1 class="m-0">Report Bulan Maret 2024</h1>
+            <h1 class="m-0">Report Bulan Juni 2024</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -65,7 +65,7 @@
                                                 $labaKotor = $penjualan - $pembelian;
                                                 $komisi = $value->komisi;
                                                 $lababersih = $value->laba;
-                                                $lababersihperhitungan = $labaKotor-$komisi;
+                                                $lababersihperhitungan = $labaKotor - $komisi;
                                             @endphp
                                             <tr>
                                                 <td>{{ $nomor++ }}</td>
@@ -76,7 +76,7 @@
                                                 <td>Rp. {{ number_format($komisi, 0, ',', '.') }}</td>
                                                 <td>Rp. {{ number_format($lababersih, 0, ',', '.') }}</td>
                                                 <td>
-                                                    @if($lababersihperhitungan == $lababersih)
+                                                    @if ($lababersihperhitungan == $lababersih)
                                                         <button type="button" class="btn btn-md btn-success btn-xs">
                                                             Aman
                                                         </button>
