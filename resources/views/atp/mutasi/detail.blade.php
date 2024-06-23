@@ -1,4 +1,4 @@
-<x-app-layout menuActive="mutasi">
+    <x-app-layout menuActive="mutasi">
     @section('breadcrumb')
         <div class="col-sm-6">
             <h1 class="m-0">DATA MUTASI BANK {{ $bank->kode_bank }}</h1>
@@ -12,17 +12,25 @@
     @endsection
 
     <div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <blockquote>Sisa Saldo: <b>Rp. {{ number_format($bank->sisa_saldo, 0, ',', '.') }}</b></blockquote>
+        <div class="row">
+            <div class="col-12">
+                <blockquote>Sisa Saldo: <b>Rp. {{ number_format($bank->sisa_saldo, 0, ',', '.') }}</b></blockquote>
+            </div>
         </div>
-    </div>
+
+        <div class="row mt-1 mb-4">
+            <div class="col-3">
+                <a href="{{ route('atp.bank.mutasi.create', ['id_bank' => $bank->id]) }}" class="btn btn-primary"><i
+                        class="fas fa-plus"></i>
+                    MUTASI</a>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-
                             <div class="col-12">
                                 @if (Session::has('sukses'))
                                     <div class="alert alert-success alert-dismissible">
@@ -61,54 +69,46 @@
                                             $nomor = 1;
                                         @endphp
                                         @foreach ($bank->mutasi as $key => $value)
-                                            <tr>
-                                                <td>{{ $nomor++ }}</td>
-                                                <td>{{ date('d-m-Y', strtotime($value->tanggal)) }}</td>
-                                                <td>{{ $value->keterangan }}</td>
-                                                <td>
-                                                    @if ($value->tipe == 'credit')
-                                                        {{ number_format($value->amount, 0, ',', '.') }}
-                                                    @else
-                                                        {{ number_format(0, 0, ',', '.') }}
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if ($value->tipe == 'debit')
-                                                        {{ number_format($value->amount, 0, ',', '.') }}
-                                                    @else
-                                                        {{ number_format(0, 0, ',', '.') }}
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <form id="delete{{ $value->id }}"
-                                                        action="{{ route('atp.bank.mutasi.delete', ['id_mutasi' => $value->id, 'id_bank' => $bank->id]) }}"
-                                                        style="display: inline-block;" method="POST">
-                                                        @csrf
-                                                        @method('delete')
-                                                        <button type="button" data-id="{{ $value->id }}"
-                                                            onclick="hapus(this)" class="btn btn-xs btn-danger">
-                                                            <i class="fas fa-trash"></i>
-                                                            Hapus
-                                                        </button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                        @endforeach
+                                        <tr>
+                                            <td>{{ $nomor++ }}</td>
+                                            <td>{{ date('d-m-Y', strtotime($value->tanggal)) }}</td>
+                                            <td>{{ $value->keterangan }}</td>
+                                            <td>
+                                                @if ($value->tipe == 'credit')
+                                                    {{ number_format($value->amount, 0, ',', '.') }}
+                                                @else
+                                                    {{ number_format(0, 0, ',', '.') }}
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($value->tipe == 'debit')
+                                                    {{ number_format($value->amount, 0, ',', '.') }}
+                                                @else
+                                                    {{ number_format(0, 0, ',', '.') }}
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <form id="delete{{ $value->id }}"
+                                                    action="{{ route('atp.bank.mutasi.delete', ['id_mutasi' => $value->id, 'id_bank' => $bank->id]) }}"
+                                                    style="display: inline-block;" method="POST">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <button type="button" data-id="{{ $value->id }}"
+                                                        onclick="hapus(this)" class="btn btn-xs btn-danger">
+                                                        <i class="fas fa-trash"></i>
+                                                        Hapus
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="row mt-1">
-            <div class="col-3">
-                <a href="{{ route('atp.bank.mutasi.create', ['id_bank' => $bank->id]) }}" class="btn btn-primary"><i
-                        class="fas fa-plus"></i>
-                    MUTASI</a>
             </div>
         </div>
     </div>

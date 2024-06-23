@@ -21,8 +21,13 @@ class MutasiBankController extends Controller
 
     public function detail($id)
     {
+        // return Bank::find($id)->mutasi;
+        $banks = Bank::where('id',$id)->with(['mutasi' => function ($query) {
+            $query->orderBy('tanggal', 'desc')->take(100);
+        }])->first();
+
         return view('atp.mutasi.detail', [
-            'bank' => Bank::find($id)
+            'bank' => $banks
         ]);
     }
 
