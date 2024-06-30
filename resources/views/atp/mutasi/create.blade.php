@@ -20,7 +20,7 @@
                         <h3 class="card-title">Mohon Isi Data Dengan Benar</h3>
                     </div>
 
-                    <form method="POST" action="{{ route('atp.bank.mutasi.store', ['id_bank' => $bank->id]) }}">
+                    <form method="POST" action="{{ route('atp.bank.mutasi.store', ['id_bank' => $bank->id]) }}" id="formCreate">
                         @csrf
                         @include('atp.mutasi.form')
                     </form>
@@ -29,4 +29,14 @@
         </div>
     </div>
 
+    @section('js')
+        <script>
+            $(function(){
+                $("#btnSimpan").on('click', function(){
+                    $(this).prop('disabled', true);
+                    $("#formCreate").submit();
+                })
+            })
+        </script>
+    @endsection
 </x-app-layout>

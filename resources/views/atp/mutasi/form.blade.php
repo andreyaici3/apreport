@@ -60,7 +60,7 @@
     </div>
 
     <div class="card-footer">
-        <button type="submit" class="btn btn-primary">Submit</button>
-        <a href="{{ route('atp.bank') }}" class="btn btn-danger float-right">Cancel</a>
+        <button type="button" class="btn btn-primary" id="btnSimpan">Submit</button>
+        <a href="{{ route('atp.bank.mutasi.detail', ['id' => $ids]) }}" class="btn btn-danger float-right">Cancel</a>
     </div>
 </div>
